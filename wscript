@@ -19,7 +19,7 @@ def build(bld):
   obj.target = "merlin"
   obj.source = "merlin.cpp"
   imflags = subprocess.Popen(['Magick-config', '--cppflags'], stdout = subprocess.PIPE).stdout.read()
-  obj.cxxflags = ["-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE", "-I/opt/local/include/ImageMagick"] + (' ').split(imflags)[:-1]
+  obj.cxxflags = ["-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE", "-I/opt/local/include/ImageMagick", "-I../"] + (' ').split(imflags)[:-1]
 
 def shutdown():
   if Options.commands['clean']:

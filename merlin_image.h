@@ -16,8 +16,12 @@ class MerlinImage : public node::ObjectWrap {
       static void Initialize(v8::Handle<Object>);
       static Handle<v8::Value> New(const v8::Arguments&);
 
-      MerlinImage();
+      MerlinImage(node::Buffer* buffer);
       virtual ~MerlinImage();
+
+  private:
+      node::Buffer *buffer;
+      MagickWand* wand;
 };
 
 } // namespace Merlin

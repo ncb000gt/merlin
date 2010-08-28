@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <node.h>
 #include <node_buffer.h>
+#include <wand/MagickWand.h>
 
 #include <cassert>  // for assert()
 

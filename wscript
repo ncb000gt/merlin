@@ -1,6 +1,7 @@
 import Options
 from os import unlink, symlink, popen
 from os.path import exists 
+import subprocess
 
 srcdir = "."
 blddir = "build"
@@ -17,7 +18,8 @@ def build(bld):
   obj = bld.new_task_gen("cxx", "shlib", "node_addon")
   obj.target = "merlin"
   obj.source = "merlin.cpp"
-  obj.cxxflags = ["-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE"]
+  imflags = subprocess.Popen(['Magick-config', '--cppflags'], stdout = subprocess.PIPE).stdout.read()
+  obj.cxxflags = ["-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE", "-I/opt/local/include/ImageMagick"] + (' ').split(imflags)[:-1]
 
 def shutdown():
   if Options.commands['clean']:

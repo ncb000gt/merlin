@@ -27,17 +27,11 @@ Handle<Value>
 MerlinImage::CropImage(const Arguments& args) {
     HandleScope scope;
 
-    MerlinImage *img = ObjectWrap::Unwrap<MerlinImage>(args.This()); 
+    MerlinImage *img = ObjectWrap::Unwrap<MerlinImage>(args.This());
     fprintf(stderr, "1\n");
-    fprintf(stderr, "%i", img->buffer->length());
-    fprintf(stderr, "1.5\n");
-    node::Buffer* new_buffer = node::Buffer::New(img->buffer->length());
-    fprintf(stderr, "2\n");
-    new_buffer->Utf8Write(img->buffer->data(), 0, img->buffer->length());
-    fprintf(stderr, "3\n");
-    MerlinImage *new_image = new MerlinImage(new_buffer);
-    fprintf(stderr, "before return\n");
-    return scope.Close(new_image->handle_);
+    //    return scope.Close(new_image->handle_);
+    Handle<String> str = String::New(img->buffer->data(), img->buffer->length());
+    return scope.Close(str);
 }
 
 void

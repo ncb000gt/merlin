@@ -2,6 +2,14 @@
 
 namespace merlin {
 
+Merlin::Merlin() {
+    // MagickWandGenesis();
+}
+
+Merlin::~Merlin() {
+    MagickWandTerminus();
+}
+
 void
 Merlin::Initialize(Handle<Object> target) {
     HandleScope scope;
@@ -11,7 +19,7 @@ Merlin::Initialize(Handle<Object> target) {
                 String::New(MERLIN_VERSION));
 
     MagickWandGenesis();
-    
+
     target->Set(String::NewSymbol("merlin"), merlin->NewInstance());
 }
 
@@ -24,4 +32,3 @@ init(Handle<Object> target)
 
     merlin::Merlin::Initialize(target);
 }
-

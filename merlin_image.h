@@ -6,7 +6,7 @@
 #include <node_buffer.h>
 #include <wand/MagickWand.h>
 
-#include <merlin.h>
+#include "merlin.h"
 
 using namespace v8;
 
@@ -18,8 +18,8 @@ class MerlinImage : public node::ObjectWrap {
       static void Initialize(Handle<Object>);
       static Handle<Value> New(const Arguments&);
 
-      MerlinImage(node::Buffer* buffer);
-      virtual ~MerlinImage();
+    explicit MerlinImage(node::Buffer* buffer);
+    virtual ~MerlinImage();
 
   private:
       node::Buffer *buffer;

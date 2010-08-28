@@ -8,13 +8,15 @@
 
 #include <merlin.h>
 
+using namespace v8;
+
 namespace merlin {
 
 class MerlinImage : public node::ObjectWrap {
   public:
-      static Persistent<v8::FunctionTemplate> constructor_template;
-      static void Initialize(v8::Handle<Object>);
-      static Handle<v8::Value> New(const v8::Arguments&);
+      static Persistent<FunctionTemplate> constructor_template;
+      static void Initialize(Handle<Object>);
+      static Handle<Value> New(const Arguments&);
 
       MerlinImage(node::Buffer* buffer);
       virtual ~MerlinImage();

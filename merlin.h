@@ -7,6 +7,8 @@
 #include <wand/MagickWand.h>
 #include <cassert>  // for assert()
 
+#include "merlin_image.h"
+
 #define MERLIN_VERSION "v0.0.1"
 
 #define BAD_ARGUMENTS Exception::TypeError(String::New("Bad argument"))

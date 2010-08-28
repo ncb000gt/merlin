@@ -23,7 +23,22 @@ MerlinImage::GetBuffer(const Arguments& args) {
     return scope.Close(buf);
 }
 
-Handle<Value> CropImage(const Arguments& args) {}
+Handle<Value> 
+MerlinImage::CropImage(const Arguments& args) {
+    HandleScope scope;
+
+    MerlinImage *img = ObjectWrap::Unwrap<MerlinImage>(args.This()); 
+    fprintf(stderr, "1\n");
+    fprintf(stderr, "%i", img->buffer->length());
+    fprintf(stderr, "1.5\n");
+    node::Buffer* new_buffer = node::Buffer::New(img->buffer->length());
+    fprintf(stderr, "2\n");
+    new_buffer->Utf8Write(img->buffer->data(), 0, img->buffer->length());
+    fprintf(stderr, "3\n");
+    MerlinImage *new_image = new MerlinImage(new_buffer);
+    fprintf(stderr, "before return\n");
+    return scope.Close(new_image->handle_);
+}
 
 void
 MerlinImage::Initialize(Handle<Object> target) {
@@ -34,6 +49,7 @@ MerlinImage::Initialize(Handle<Object> target) {
     constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
     constructor_template->SetClassName(String::NewSymbol("MerlinImage"));
 
+    NODE_SET_PROTOTYPE_METHOD(constructor_template, "cropImage", MerlinImage::CropImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "getBuffer", MerlinImage::GetBuffer);
     
     target->Set(String::NewSymbol("MerlinImage"), constructor_template->GetFunction());

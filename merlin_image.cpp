@@ -7,10 +7,23 @@ Persistent<FunctionTemplate> MerlinImage::constructor_template;
 Handle<Value>
 MerlinImage::New(const Arguments& args) {
     HandleScope scope;
-    MerlinImage* img = new MerlinImage(ObjectWrap::Unwrap<node::Buffer>(args[0]->ToObject()));
+    node::Buffer *buf = ObjectWrap::Unwrap<node::Buffer>(args[0]->ToObject());
+    MerlinImage* img = new MerlinImage(buf);
     img->Wrap(args.This());
     return scope.Close(args.This());
 }
+
+Handle<Value>
+MerlinImage::GetBuffer(const Arguments& args) {
+    HandleScope scope;
+
+    MerlinImage *img = ObjectWrap::Unwrap<MerlinImage>(args.This());
+    Handle<Value> buf = img->buffer->handle_;
+
+    return scope.Close(buf);
+}
+
+Handle<Value> CropImage(const Arguments& args) {}
 
 void
 MerlinImage::Initialize(Handle<Object> target) {
@@ -20,6 +33,8 @@ MerlinImage::Initialize(Handle<Object> target) {
     constructor_template = Persistent<FunctionTemplate>::New(f);
     constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
     constructor_template->SetClassName(String::NewSymbol("MerlinImage"));
+
+    NODE_SET_PROTOTYPE_METHOD(constructor_template, "getBuffer", MerlinImage::GetBuffer);
     
     target->Set(String::NewSymbol("MerlinImage"), constructor_template->GetFunction());
 }

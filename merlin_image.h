@@ -17,6 +17,9 @@ class MerlinImage : public node::ObjectWrap {
       static Persistent<FunctionTemplate> constructor_template;
       static void Initialize(Handle<Object>);
       static Handle<Value> New(const Arguments&);
+      
+      static Handle<Value> GetBuffer(const Arguments&);
+      static Handle<Value> CropImage(const Arguments&);
 
     explicit MerlinImage(node::Buffer* buffer);
     virtual ~MerlinImage();

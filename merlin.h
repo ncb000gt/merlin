@@ -5,7 +5,6 @@
 #include <node.h>
 #include <node_buffer.h>
 #include <wand/MagickWand.h>
-
 #include <cassert>  // for assert()
 
 #define MERLIN_VERSION "v0.0.1"

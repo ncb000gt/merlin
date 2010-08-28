@@ -14,15 +14,18 @@ void
 Merlin::Initialize(Handle<Object> target) {
     HandleScope scope;
 
-    Handle<Object> merlin = Object::New();
-    merlin->Set(String::NewSymbol("version"),
+    target->Set(String::NewSymbol("version"),
                 String::New(MERLIN_VERSION));
 
-    MerlinImage::Initialize(merlin);
+    MerlinImage::Initialize(target);
 
     MagickWandGenesis();
     
-    target->Set(String::NewSymbol("merlin"), merlin);
+    Handle<ObjectTemplate> global = ObjectTemplate::New();
+    Handle<Context> context = Context::New(NULL, global);
+    Context::Scope context_scope(context);
+
+    context->Global()->Set(String::NewSymbol("merlin"), target);
 }
 
 } // namespace

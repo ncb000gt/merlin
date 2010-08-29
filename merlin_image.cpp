@@ -44,6 +44,18 @@ MerlinImage::WriteImage(MagickWand *wand){
     return MerlinImage::constructor_template->GetFunction()->NewInstance(1, argv);
 }
 
+Handle<Value>
+MerlinImage::ResizeImage(const Arguments& args) {
+    HandleScope scope;
+    MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+    int width = args[0]->IntegerValue();
+    int height = args[1]->IntegerValue();
+    MagickAdaptiveResizeImage(wand, width, height);
+
+    return scope.Close(MerlinImage::WriteImage(wand));
+}
+
 Handle<Value> 
 MerlinImage::CropImage(const Arguments& args) {
     HandleScope scope;
@@ -53,8 +65,18 @@ MerlinImage::CropImage(const Arguments& args) {
     int height = args[1]->IntegerValue();
     int x = args[2]->IntegerValue();
     int y = args[3]->IntegerValue();
-
     MagickCropImage(wand, width, height, x, y);
+
+    return scope.Close(MerlinImage::WriteImage(wand));
+}
+
+Handle<Value> 
+MerlinImage::NegateImage(const Arguments& args) {
+    HandleScope scope;
+    MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+    MagickNegateImage(wand, MagickFalse);
+
     return scope.Close(MerlinImage::WriteImage(wand));
 }
 
@@ -67,7 +89,9 @@ MerlinImage::Initialize(Handle<Object> target) {
     constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
     constructor_template->SetClassName(String::NewSymbol("MerlinImage"));
 
-    NODE_SET_PROTOTYPE_METHOD(constructor_template, "cropImage", MerlinImage::CropImage);
+    NODE_SET_PROTOTYPE_METHOD(constructor_template, "resize",    MerlinImage::ResizeImage);
+    NODE_SET_PROTOTYPE_METHOD(constructor_template, "crop",      MerlinImage::CropImage);
+    NODE_SET_PROTOTYPE_METHOD(constructor_template, "negative",  MerlinImage::NegateImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "getBuffer", MerlinImage::GetBuffer);
     
     target->Set(String::NewSymbol("MerlinImage"), constructor_template->GetFunction());

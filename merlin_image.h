@@ -17,9 +17,13 @@ class MerlinImage : public node::ObjectWrap {
       static Persistent<FunctionTemplate> constructor_template;
       static void Initialize(Handle<Object>);
       static Handle<Value> New(const Arguments&);
-      
       static Handle<Value> GetBuffer(const Arguments&);
+
+      // image transformation functions
       static Handle<Value> CropImage(const Arguments&);
+      static Handle<Value> ResizeImage(const Arguments&);
+      static Handle<Value> NegateImage(const Arguments&);
+      static Handle<Value> SepiaImage(const Arguments&);
 
       static MagickWand* ReadImage(MerlinImage*);
       static Handle<Value> WriteImage(MagickWand*);

@@ -48,7 +48,13 @@ Handle<Value>
 MerlinImage::CropImage(const Arguments& args) {
     HandleScope scope;
     MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
-    MagickCropImage(wand, 100, 100, 100, 100);
+
+    int width = args[0]->IntegerValue();
+    int height = args[1]->IntegerValue();
+    int x = args[2]->IntegerValue();
+    int y = args[3]->IntegerValue();
+
+    MagickCropImage(wand, width, height, x, y);
     return scope.Close(MerlinImage::WriteImage(wand));
 }
 

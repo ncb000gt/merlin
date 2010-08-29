@@ -32,8 +32,8 @@ MerlinImage::CropImage(const Arguments& args) {
     size_t length;
     unsigned char* data = MagickGetImageBlob(img->wand, length);
     fprintf(stderr, "%i\n", length);
-    Handle<String> str = String::New((const char*) data, *length);
-    fprintf(stderr, "%s\n", data);
+    Handle<String> str = String::New((const char*) data, length);
+    //fprintf(stderr, "%s\n", data);
     return scope.Close(str);
 }
 

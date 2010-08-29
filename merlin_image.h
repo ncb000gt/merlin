@@ -21,12 +21,14 @@ class MerlinImage : public node::ObjectWrap {
       static Handle<Value> GetBuffer(const Arguments&);
       static Handle<Value> CropImage(const Arguments&);
 
+      static MagickWand* ReadImage(MerlinImage*);
+      static Handle<Value> WriteImage(MagickWand*);
+
     explicit MerlinImage(node::Buffer* buffer);
     virtual ~MerlinImage();
 
   private:
       node::Buffer *buffer;
-      MagickWand* wand;
 };
 
 } // namespace Merlin

@@ -24,16 +24,15 @@ MerlinImage::GetBuffer(const Arguments& args) {
     return scope.Close(buf);
 }
 
-Handle<Value> 
-MerlinImage::CropImage(const Arguments& args) {
-    HandleScope scope;
-
+MagickWand*
+MerlinImage::ReadImage(MerlinImage *img){
     MagickWand* wand = NewMagickWand();
-    MerlinImage *img = ObjectWrap::Unwrap<MerlinImage>(args.This());
     MagickReadImageBlob(wand, img->buffer->data(), img->buffer->length());
+    return wand;
+}
 
-    MagickCropImage(wand, 100, 100, 100, 100);
-
+Handle<Value>
+MerlinImage::WriteImage(MagickWand *wand){
     size_t length;
     unsigned char* data = MagickGetImageBlob(wand, &length);
     node::Buffer *buf = node::Buffer::New(length);
@@ -42,7 +41,15 @@ MerlinImage::CropImage(const Arguments& args) {
     wand = DestroyMagickWand(wand);
 
     v8::Handle<v8::Value> argv[1] = {buf->handle_};
-    return scope.Close(MerlinImage::constructor_template->GetFunction()->NewInstance(1, argv));
+    return MerlinImage::constructor_template->GetFunction()->NewInstance(1, argv);
+}
+
+Handle<Value> 
+MerlinImage::CropImage(const Arguments& args) {
+    HandleScope scope;
+    MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+    MagickCropImage(wand, 100, 100, 100, 100);
+    return scope.Close(MerlinImage::WriteImage(wand));
 }
 
 void

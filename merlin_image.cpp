@@ -28,9 +28,12 @@ MerlinImage::CropImage(const Arguments& args) {
     HandleScope scope;
 
     MerlinImage *img = ObjectWrap::Unwrap<MerlinImage>(args.This());
-    fprintf(stderr, "1\n");
-    //    return scope.Close(new_image->handle_);
-    Handle<String> str = String::New(img->buffer->data(), img->buffer->length());
+    MagickCropImage(img->wand, 20, 20, 20, 20);
+    size_t length;
+    unsigned char* data = MagickGetImageBlob(img->wand, length);
+    fprintf(stderr, "%i\n", length);
+    Handle<String> str = String::New((const char*) data, *length);
+    fprintf(stderr, "%s\n", data);
     return scope.Close(str);
 }
 

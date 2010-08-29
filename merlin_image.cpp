@@ -30,7 +30,7 @@ MerlinImage::CropImage(const Arguments& args) {
     MerlinImage *img = ObjectWrap::Unwrap<MerlinImage>(args.This());
     MagickCropImage(img->wand, 20, 20, 20, 20);
     size_t length;
-    unsigned char* data = MagickGetImageBlob(img->wand, length);
+    unsigned char* data = MagickGetImageBlob(img->wand, &length);
     fprintf(stderr, "%i\n", length);
     Handle<String> str = String::New((const char*) data, length);
     //fprintf(stderr, "%s\n", data);

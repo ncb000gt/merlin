@@ -80,6 +80,19 @@ MerlinImage::NegateImage(const Arguments& args) {
     return scope.Close(MerlinImage::WriteImage(wand));
 }
 
+Handle<Value> 
+MerlinImage::RotateImage(const Arguments& args) {
+    HandleScope scope;
+    MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+    double degrees = args[0]->NumberValue();
+    PixelWand* pixelwand = NewPixelWand();
+    MagickRotateImage(wand, pixelwand, degrees);
+    pixelwand = DestroyPixelWand(pixelwand);
+
+    return scope.Close(MerlinImage::WriteImage(wand));
+}
+
 void
 MerlinImage::Initialize(Handle<Object> target) {
     HandleScope scope;
@@ -92,6 +105,7 @@ MerlinImage::Initialize(Handle<Object> target) {
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "resize",    MerlinImage::ResizeImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "crop",      MerlinImage::CropImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "negative",  MerlinImage::NegateImage);
+    NODE_SET_PROTOTYPE_METHOD(constructor_template, "rotate",    MerlinImage::RotateImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "getBuffer", MerlinImage::GetBuffer);
     
     target->Set(String::NewSymbol("MerlinImage"), constructor_template->GetFunction());

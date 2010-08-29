@@ -23,7 +23,7 @@ class MerlinImage : public node::ObjectWrap {
       static Handle<Value> CropImage(const Arguments&);
       static Handle<Value> ResizeImage(const Arguments&);
       static Handle<Value> NegateImage(const Arguments&);
-      static Handle<Value> SepiaImage(const Arguments&);
+      static Handle<Value> RotateImage(const Arguments&);
 
       static MagickWand* ReadImage(MerlinImage*);
       static Handle<Value> WriteImage(MagickWand*);

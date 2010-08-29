@@ -1,3 +1,4 @@
+#include <string.h>
 #include "merlin_image.h":
 
 namespace merlin {
@@ -34,11 +35,13 @@ MerlinImage::CropImage(const Arguments& args) {
     size_t length;
     unsigned char* data = MagickGetImageBlob(img->wand, &length);
     MagickSetFormat(img->wand, "JPEG");
-    //fprintf(stderr, "%i\n", length);
-    Handle<String> str = String::New((const char*) data, length);
+
     node::Buffer *buf = node::Buffer::New(length);
-    buf->Utf8Write(data, 0, length);
-    return scope.Close(str);
+
+    char *buff_data = buf->data();
+    strcpy(buff_data, (char *)data);
+
+    return scope.Close(buf->handle_);
 }
 
 void

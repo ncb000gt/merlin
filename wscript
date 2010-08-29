@@ -22,7 +22,7 @@ def build(bld):
   ldflags = subprocess.Popen(['Magick-config', '--ldflags', '--libs'], stdout = subprocess.PIPE).stdout.read()
   wandflags = subprocess.Popen(['MagickWand-config', '--ldflags', '--libs'], stdout = subprocess.PIPE).stdout.read()
   obj.cxxflags = ["-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE", "-I../"] + imflags.split() 
-  obj.linkflags = ["-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE", "-I../", "-L/Users/thomas/Code/node-v0.2.0/build/default/src/node"] + imflags.split() + ldflags.split() + wandflags.split()
+  obj.linkflags = ["-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE", "-I../"] + imflags.split() + ldflags.split() + wandflags.split()
 
 def shutdown():
   if Options.commands['clean']:

@@ -36,6 +36,8 @@ MerlinImage::CropImage(const Arguments& args) {
     MagickSetFormat(img->wand, "JPEG");
     //fprintf(stderr, "%i\n", length);
     Handle<String> str = String::New((const char*) data, length);
+    node::Buffer *buf = node::Buffer::New(length);
+    buf->Utf8Write(data, 0, length);
     return scope.Close(str);
 }
 

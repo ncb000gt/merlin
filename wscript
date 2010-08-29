@@ -15,16 +15,6 @@ def configure(conf):
   conf.check_tool("node_addon")
 
 def build(bld):
-  import Build
-  old = Build.BuildContext.exec_command
-  def exec_command(self, cmd, **kw):
-    if isinstance(cmd, list): 
-        cmd.insert(cmd.index("-o"),
-                '/Users/thomas/Code/node-v0.2.0/build/default/src/node_buffer_4.o')
-        print(" ".join(cmd))
-    return old(self, cmd, **kw)
-  Build.BuildContext.exec_command = exec_command
-
   obj = bld.new_task_gen("cxx", "shlib", "node_addon")
   obj.target = "merlin"
   obj.source = "merlin.cpp merlin_image.cpp"

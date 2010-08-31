@@ -1,5 +1,5 @@
 #include <string.h>
-#include "merlin_image.h":
+#include "merlin_image.h"
 
 namespace merlin {
 
@@ -27,18 +27,19 @@ MerlinImage::GetBuffer(const Arguments& args) {
 MagickWand*
 MerlinImage::ReadImage(MerlinImage *img){
     MagickWand* wand = NewMagickWand();
-    MagickReadImageBlob(wand, img->buffer->data(), img->buffer->length());
+    MagickReadImageBlob(wand, reinterpret_cast<unsigned char*>(img->buffer->data()), img->buffer->length());
     return wand;
 }
 
 Handle<Value>
 MerlinImage::WriteImage(MagickWand *wand){
     size_t length;
-    unsigned char* data = MagickGetImageBlob(wand, &length);
+    unsigned char* data = MagickWriteImageBlob(wand, &length);
     node::Buffer *buf = node::Buffer::New(length);
     char *buff_data = buf->data();
     memcpy(buff_data, data, length);
-    wand = DestroyMagickWand(wand);
+    MagickRelinquishMemory(data);
+    DestroyMagickWand(wand);
 
     v8::Handle<v8::Value> argv[1] = {buf->handle_};
     return MerlinImage::constructor_template->GetFunction()->NewInstance(1, argv);
@@ -51,7 +52,7 @@ MerlinImage::ResizeImage(const Arguments& args) {
 
     int width = args[0]->IntegerValue();
     int height = args[1]->IntegerValue();
-    MagickAdaptiveResizeImage(wand, width, height);
+    MagickResizeImage(wand, width, height, LanczosFilter, 0.0);
 
     return scope.Close(MerlinImage::WriteImage(wand));
 }
@@ -88,7 +89,7 @@ MerlinImage::RotateImage(const Arguments& args) {
     double degrees = args[0]->NumberValue();
     PixelWand* pixelwand = NewPixelWand();
     MagickRotateImage(wand, pixelwand, degrees);
-    pixelwand = DestroyPixelWand(pixelwand);
+    /*pixelwand =*/ DestroyPixelWand(pixelwand);
 
     return scope.Close(MerlinImage::WriteImage(wand));
 }

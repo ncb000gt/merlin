@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <node.h>
 #include <node_buffer.h>
-#include <wand/MagickWand.h>
+#include <wand/magick_wand.h>
 
 #include "merlin.h"
 

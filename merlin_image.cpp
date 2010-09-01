@@ -45,6 +45,30 @@ MerlinImage::WriteImage(MagickWand *wand){
     return MerlinImage::constructor_template->GetFunction()->NewInstance(1, argv);
 }
 
+Handle<Value> 
+MerlinImage::BlurImage(const Arguments& args) {
+    HandleScope scope;
+    MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+    const double radius = args[0]->NumberValue();
+    const double sigma = args[1]->NumberValue();
+    MagickBlurImage(wand, radius, sigma);
+
+    return scope.Close(MerlinImage::WriteImage(wand));
+}
+
+Handle<Value> 
+MerlinImage::CharcoalImage(const Arguments& args) {
+    HandleScope scope;
+    MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+    const double radius = args[0]->NumberValue();
+    const double sigma = args[1]->NumberValue();
+    MagickCharcoalImage(wand, radius, sigma);
+
+    return scope.Close(MerlinImage::WriteImage(wand));
+}
+
 Handle<Value>
 MerlinImage::ResizeImage(const Arguments& args) {
     HandleScope scope;
@@ -103,6 +127,8 @@ MerlinImage::Initialize(Handle<Object> target) {
     constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
     constructor_template->SetClassName(String::NewSymbol("MerlinImage"));
 
+    NODE_SET_PROTOTYPE_METHOD(constructor_template, "blur",    MerlinImage::BlurImage);
+    NODE_SET_PROTOTYPE_METHOD(constructor_template, "charcoal",    MerlinImage::CharcoalImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "resize",    MerlinImage::ResizeImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "crop",      MerlinImage::CropImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "negative",  MerlinImage::NegateImage);

@@ -69,6 +69,43 @@ MerlinImage::CharcoalImage(const Arguments& args) {
     return scope.Close(MerlinImage::WriteImage(wand));
 }
 
+Handle<Value> 
+MerlinImage::ChopImage(const Arguments& args) {
+    HandleScope scope;
+    MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+
+    int width = args[0]->IntegerValue();
+    int height = args[1]->IntegerValue();
+    int x = args[2]->IntegerValue();
+    int y = args[3]->IntegerValue();
+    MagickChopImage(wand, width, height, x, y);
+
+    return scope.Close(MerlinImage::WriteImage(wand));
+}
+
+Handle<Value> 
+MerlinImage::ClipImage(const Arguments& args) {
+    HandleScope scope;
+    MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+    MagickClipImage(wand);
+
+    return scope.Close(MerlinImage::WriteImage(wand));
+}
+
+Handle<Value> 
+MerlinImage::ClipPathImage(const Arguments& args) {
+    HandleScope scope;
+    MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+    const String::Utf8Value pathname(args[0]);
+    const unsigned int inside = args[1]->IntegerValue();
+    MagickClipPathImage(wand, *pathname, inside);
+
+    return scope.Close(MerlinImage::WriteImage(wand));
+}
+
 Handle<Value>
 MerlinImage::ResizeImage(const Arguments& args) {
     HandleScope scope;
@@ -113,7 +150,7 @@ MerlinImage::RotateImage(const Arguments& args) {
     double degrees = args[0]->NumberValue();
     PixelWand* pixelwand = NewPixelWand();
     MagickRotateImage(wand, pixelwand, degrees);
-    /*pixelwand =*/ DestroyPixelWand(pixelwand);
+    DestroyPixelWand(pixelwand);
 
     return scope.Close(MerlinImage::WriteImage(wand));
 }
@@ -129,6 +166,9 @@ MerlinImage::Initialize(Handle<Object> target) {
 
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "blur",    MerlinImage::BlurImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "charcoal",    MerlinImage::CharcoalImage);
+    NODE_SET_PROTOTYPE_METHOD(constructor_template, "chop",    MerlinImage::ChopImage);
+    NODE_SET_PROTOTYPE_METHOD(constructor_template, "clip",    MerlinImage::ClipImage);
+    NODE_SET_PROTOTYPE_METHOD(constructor_template, "clipPath",    MerlinImage::ClipPathImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "resize",    MerlinImage::ResizeImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "crop",      MerlinImage::CropImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "negative",  MerlinImage::NegateImage);

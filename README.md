@@ -12,10 +12,16 @@
     res.write(new_image.getBuffer());
 
 ## Supported Operations ##
-    MerlinImage.rotate(/*double*/ degrees)
-    MerlinImage.crop(/*int*/ width, /*int*/ height, /*int*/xoffset, /*int*/yoffset)
-    MerlinImage.resize(/*int*/ width, /*int*/ height)
+    MerlinImage.blur(/*double*/ radius, /*double*/ sigma)
+    MerlinImage.charcoal(/*double*/ radius, /*double*/ sigma)
+    MerlinImage.chop(/*int*/ width, /*int*/ height, /*int*/ xoffset, /*int*/ yoffset)
+    MerlinImage.clip()
+    MerlinImage.clipPath(/*String*/ pathname, /*int*/ inside)
+    MerlinImage.crop(/*int*/ width, /*int*/ height, /*int*/ xoffset, /*int*/ yoffset)
+    MerlinImage.mosaic(/*MerlinImage*/ image0[,/*MerlinImage*/ image1.../*MerlinImage*/ imageN])
     MerlinImage.negative()
+    MerlinImage.resize(/*int*/ width, /*int*/ height)
+    MerlinImage.rotate(/*double*/ degrees)
 
-More to come!  We plan to create bindings for as much of the ImageMagick API as we can.
 
+## More to come! ##

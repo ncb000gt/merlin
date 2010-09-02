@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <node.h>
 #include <node_buffer.h>
-#include <wand/MagickWand.h>
+#include <wand/magick_wand.h>
 
 #include "merlin.h"
 
@@ -20,6 +20,8 @@ class MerlinImage : public node::ObjectWrap {
       static Handle<Value> GetBuffer(const Arguments&);
 
       // image transformation functions
+      static Handle<Value> BlurImage(const Arguments&);
+      static Handle<Value> CharcoalImage(const Arguments&);
       static Handle<Value> CropImage(const Arguments&);
       static Handle<Value> ResizeImage(const Arguments&);
       static Handle<Value> NegateImage(const Arguments&);

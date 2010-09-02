@@ -7,7 +7,7 @@ Merlin::Merlin() {
 }
 
 Merlin::~Merlin() {
-    MagickWandTerminus();
+    //MagickWandTerminus();
 }
 
 void
@@ -19,7 +19,7 @@ Merlin::Initialize(Handle<Object> target) {
 
     MerlinImage::Initialize(target);
 
-    MagickWandGenesis();
+    //MagickWandGenesis();
     
     Handle<ObjectTemplate> global = ObjectTemplate::New();
     Handle<Context> context = Context::New(NULL, global);

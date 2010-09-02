@@ -18,10 +18,14 @@ def build(bld):
   obj = bld.new_task_gen("cxx", "shlib", "node_addon")
   obj.target = "merlin"
   obj.source = "merlin.cpp merlin_image.cpp"
-  imflags = subprocess.Popen(['Magick-config', '--cppflags'], stdout = subprocess.PIPE).stdout.read()
+
+  imflags = "-I/usr/include/GraphicsMagick/" #subprocess.Popen(['Magick-config', '--cppflags'], stdout = subprocess.PIPE).stdout.read()
   ldflags = subprocess.Popen(['Magick-config', '--ldflags', '--libs'], stdout = subprocess.PIPE).stdout.read()
+
   wandflags = subprocess.Popen(['MagickWand-config', '--ldflags', '--libs'], stdout = subprocess.PIPE).stdout.read()
+
   obj.cxxflags = ["-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE", "-I../"] + imflags.split() 
+
   obj.linkflags = ["-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE", "-I../"] + imflags.split() + ldflags.split() + wandflags.split()
 
 def shutdown():

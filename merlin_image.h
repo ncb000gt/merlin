@@ -21,11 +21,13 @@ class MerlinImage : public node::ObjectWrap {
 
       // image transformation functions
       static Handle<Value> AddImage(const Arguments&);
+      static Handle<Value> AddNoiseImage(const Arguments&);
       static Handle<Value> BlurImage(const Arguments&);
       static Handle<Value> CharcoalImage(const Arguments&);
       static Handle<Value> ChopImage(const Arguments&);
       static Handle<Value> ClipImage(const Arguments&);
       static Handle<Value> ClipPathImage(const Arguments&);
+      static Handle<Value> CoalesceImages(const Arguments&);
       static Handle<Value> CropImage(const Arguments&);
       static Handle<Value> MosaicImages(const Arguments&);      
       static Handle<Value> ResizeImage(const Arguments&);

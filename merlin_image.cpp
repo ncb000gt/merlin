@@ -57,6 +57,48 @@ MerlinImage::AddImage(const Arguments& args) {
     return scope.Close(MerlinImage::WriteImage(wand));
 }
 
+    /**
+     *   Type are:
+     *   - Uniform 0
+     *   - Gaussian 1
+     *   - Multiplicative 2
+     *   - Impulse 3
+     *   - Laplacian 4
+     *   - Poisson 5
+     */
+Handle<Value> 
+MerlinImage::AddNoiseImage(const Arguments& args) {
+    HandleScope scope;
+    MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+    const int type = args[0]->IntegerValue();
+    NoiseType t;
+    switch(type) {
+    case 0:
+	t = UniformNoise;
+	break;
+    case 1:
+	t = GaussianNoise;
+	break;
+    case 2:
+	t = MultiplicativeGaussianNoise;
+	break;
+    case 3:
+	t = ImpulseNoise;
+	break;
+    case 4:
+	t = LaplacianNoise;
+	break;
+    case 5:
+	t = PoissonNoise;
+	break;
+    }
+
+    MagickAddNoiseImage(wand, t);
+
+    return scope.Close(MerlinImage::WriteImage(wand));
+}
+
 Handle<Value> 
 MerlinImage::BlurImage(const Arguments& args) {
     HandleScope scope;
@@ -116,6 +158,22 @@ MerlinImage::ClipPathImage(const Arguments& args) {
     MagickClipPathImage(wand, *pathname, inside);
 
     return scope.Close(MerlinImage::WriteImage(wand));
+}
+
+Handle<Value> 
+MerlinImage::CoalesceImages(const Arguments& args) {
+    HandleScope scope;
+    MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+    const int len = args.Length();
+    for (int i = 0; i < len; i++) {
+	MerlinImage *mi = ObjectWrap::Unwrap<MerlinImage>(args[i]->ToObject());
+	MagickAddImage(wand, MerlinImage::ReadImage(mi));
+    }
+    
+    MagickWand* mosaicWand = MagickCoalesceImages(wand);
+
+    return scope.Close(MerlinImage::WriteImage(mosaicWand));
 }
 
 Handle<Value> 
@@ -193,11 +251,13 @@ MerlinImage::Initialize(Handle<Object> target) {
     constructor_template->SetClassName(String::NewSymbol("MerlinImage"));
 
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "add",    MerlinImage::AddImage);
+    NODE_SET_PROTOTYPE_METHOD(constructor_template, "addNoise",    MerlinImage::AddNoiseImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "blur",    MerlinImage::BlurImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "charcoal",    MerlinImage::CharcoalImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "chop",    MerlinImage::ChopImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "clip",    MerlinImage::ClipImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "clipPath",    MerlinImage::ClipPathImage);
+    NODE_SET_PROTOTYPE_METHOD(constructor_template, "coalesce",  MerlinImage::CoalesceImages);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "resize",    MerlinImage::ResizeImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "crop",      MerlinImage::CropImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "mosaic",  MerlinImage::MosaicImages);

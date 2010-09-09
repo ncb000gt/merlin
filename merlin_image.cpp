@@ -177,6 +177,17 @@ MerlinImage::CoalesceImages(const Arguments& args) {
 }
 
 Handle<Value> 
+MerlinImage::CommentImage(const Arguments& args) {
+    HandleScope scope;
+    MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+    const String::Utf8Value pathname(args[0]);
+    MagickCommentImage(wand, *pathname);
+
+    return scope.Close(MerlinImage::WriteImage(wand));
+}
+
+Handle<Value> 
 MerlinImage::MosaicImages(const Arguments& args) {
     HandleScope scope;
     MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
@@ -258,6 +269,7 @@ MerlinImage::Initialize(Handle<Object> target) {
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "clip",    MerlinImage::ClipImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "clipPath",    MerlinImage::ClipPathImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "coalesce",  MerlinImage::CoalesceImages);
+    NODE_SET_PROTOTYPE_METHOD(constructor_template, "comment",  MerlinImage::CommentImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "resize",    MerlinImage::ResizeImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "crop",      MerlinImage::CropImage);
     NODE_SET_PROTOTYPE_METHOD(constructor_template, "mosaic",  MerlinImage::MosaicImages);

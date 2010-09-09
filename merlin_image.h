@@ -28,6 +28,7 @@ class MerlinImage : public node::ObjectWrap {
       static Handle<Value> ClipImage(const Arguments&);
       static Handle<Value> ClipPathImage(const Arguments&);
       static Handle<Value> CoalesceImages(const Arguments&);
+      static Handle<Value> CommentImage(const Arguments&);
       static Handle<Value> CropImage(const Arguments&);
       static Handle<Value> MosaicImages(const Arguments&);      
       static Handle<Value> ResizeImage(const Arguments&);

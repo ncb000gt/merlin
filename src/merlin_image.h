@@ -13,6 +13,8 @@ using namespace v8;
 namespace merlin {
 
 class MerlinImage : public node::ObjectWrap {
+  node::Buffer *buffer;
+
   public:
       static Persistent<FunctionTemplate> constructor_template;
       static void Initialize(Handle<Object>);
@@ -37,12 +39,10 @@ class MerlinImage : public node::ObjectWrap {
 
       static MagickWand* ReadImage(MerlinImage*);
       static Handle<Value> WriteImage(MagickWand*);
+      static node::Buffer* Buffer();
 
-    explicit MerlinImage(node::Buffer* buffer);
+    explicit MerlinImage(node::Buffer *buffer);
     virtual ~MerlinImage();
-
-  private:
-      node::Buffer *buffer;
 };
 
 } // namespace Merlin

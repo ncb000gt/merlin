@@ -17,7 +17,7 @@ def configure(conf):
 def build(bld):
   obj = bld.new_task_gen("cxx", "shlib", "node_addon")
   obj.target = "merlin"
-  obj.source = "src/merlin.cpp src/merlin_image.cpp"
+  obj.source = "src/merlin.cpp src/merlin_image.cpp src/buffer_compat.cpp"
 
   imflags = "-I/usr/include/GraphicsMagick/" #subprocess.Popen(['Magick-config', '--cppflags'], stdout = subprocess.PIPE).stdout.read()
   ldflags = subprocess.Popen(['Magick-config', '--ldflags', '--libs'], stdout = subprocess.PIPE).stdout.read()

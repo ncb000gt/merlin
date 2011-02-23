@@ -8,8 +8,11 @@ namespace merlin {
 
     Handle<Value> MerlinImage::New(const Arguments& args) {
         HandleScope scope;
-        *buf = ObjectWrap::Unwrap<node::Buffer>(args[0]->ToObject());
-        MerlinImage* img = new MerlinImage(buf);
+        
+        size_t len = BufferLength(args[0]->ToObject());
+        node::Buffer *tmp = node::Buffer::New(len);
+        memcpy(BufferData(tmp), BufferData(args[0]->ToObject()), len);
+        MerlinImage* img = new MerlinImage(tmp);
         img->Wrap(args.This());
         return scope.Close(args.This());
     }
@@ -25,7 +28,7 @@ namespace merlin {
 
     MagickWand* MerlinImage::ReadImage(MerlinImage *img){
         MagickWand* wand = NewMagickWand();
-        MagickReadImageBlob(wand, reinterpret_cast<unsigned char*>(node::Buffer::Data(img->buffer)), node::Buffer::Length(img->buffer));
+        MagickReadImageBlob(wand, reinterpret_cast<unsigned char*>(BufferData(img->buffer)), BufferLength(img->buffer));
         return wand;
     }
 
@@ -33,7 +36,7 @@ namespace merlin {
         size_t length;
         unsigned char* data = MagickWriteImageBlob(wand, &length);
         node::Buffer *buf = node::Buffer::New(length);
-        char *buff_data = node::Buffer::Data(buf);
+        char *buff_data = BufferData(buf);
         memcpy(buff_data, data, length);
         MagickRelinquishMemory(data);
         DestroyMagickWand(wand);

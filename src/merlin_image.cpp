@@ -193,17 +193,6 @@ namespace merlin {
         return scope.Close(MerlinImage::WriteImage(mosaicWand));
     }
 
-    Handle<Value> MerlinImage::ResizeImage(const Arguments& args) {
-        HandleScope scope;
-        MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
-
-        int width = args[0]->IntegerValue();
-        int height = args[1]->IntegerValue();
-        MagickResizeImage(wand, width, height, LanczosFilter, 0.0);
-
-        return scope.Close(MerlinImage::WriteImage(wand));
-    }
-
     Handle<Value> MerlinImage::CropImage(const Arguments& args) {
         HandleScope scope;
         MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
@@ -226,6 +215,17 @@ namespace merlin {
         return scope.Close(MerlinImage::WriteImage(wand));
     }
 
+    Handle<Value> MerlinImage::ResizeImage(const Arguments& args) {
+        HandleScope scope;
+        MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+        int width = args[0]->IntegerValue();
+        int height = args[1]->IntegerValue();
+        MagickResizeImage(wand, width, height, LanczosFilter, 1.0);
+
+        return scope.Close(MerlinImage::WriteImage(wand));
+    }
+
     Handle<Value> MerlinImage::RotateImage(const Arguments& args) {
         HandleScope scope;
         MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
@@ -234,6 +234,17 @@ namespace merlin {
         PixelWand* pixelwand = NewPixelWand();
         MagickRotateImage(wand, pixelwand, degrees);
         DestroyPixelWand(pixelwand);
+
+        return scope.Close(MerlinImage::WriteImage(wand));
+    }
+
+    Handle<Value> MerlinImage::ScaleImage(const Arguments& args) {
+        HandleScope scope;
+        MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+        int width = args[0]->IntegerValue();
+        int height = args[1]->IntegerValue();
+        MagickScaleImage(wand, width, height);
 
         return scope.Close(MerlinImage::WriteImage(wand));
     }
@@ -255,11 +266,12 @@ namespace merlin {
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "clipPath",    MerlinImage::ClipPathImage);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "coalesce",  MerlinImage::CoalesceImages);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "comment",  MerlinImage::CommentImage);
-        NODE_SET_PROTOTYPE_METHOD(constructor_template, "resize",    MerlinImage::ResizeImage);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "crop",      MerlinImage::CropImage);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "mosaic",  MerlinImage::MosaicImages);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "negative",  MerlinImage::NegateImage);
+        NODE_SET_PROTOTYPE_METHOD(constructor_template, "resize",    MerlinImage::ResizeImage);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "rotate",    MerlinImage::RotateImage);
+        NODE_SET_PROTOTYPE_METHOD(constructor_template, "scale",    MerlinImage::ScaleImage);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "getBuffer", MerlinImage::GetBuffer);
 
         target->Set(String::NewSymbol("MerlinImage"), constructor_template->GetFunction());

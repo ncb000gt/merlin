@@ -178,6 +178,30 @@ namespace merlin {
         return scope.Close(MerlinImage::WriteImage(wand));
     }
 
+    Handle<Value> MerlinImage::CropImage(const Arguments& args) {
+        HandleScope scope;
+        MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+        int width = args[0]->IntegerValue();
+        int height = args[1]->IntegerValue();
+        int x = args[2]->IntegerValue();
+        int y = args[3]->IntegerValue();
+        MagickCropImage(wand, width, height, x, y);
+
+        return scope.Close(MerlinImage::WriteImage(wand));
+    }
+
+    Handle<Value> MerlinImage::ImageInfo(const Arguments& args) {
+        HandleScope scope;
+        MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+        Local<Object> size = Object::New();
+        size->Set(String::NewSymbol("width"), Number::New(MagickGetImageWidth(wand)));
+        size->Set(String::NewSymbol("height"), Number::New(MagickGetImageHeight(wand)));
+
+        return scope.Close(size);
+    }
+
     Handle<Value> MerlinImage::MosaicImages(const Arguments& args) {
         HandleScope scope;
         MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
@@ -191,19 +215,6 @@ namespace merlin {
         MagickWand* mosaicWand = MagickMosaicImages(wand);
 
         return scope.Close(MerlinImage::WriteImage(mosaicWand));
-    }
-
-    Handle<Value> MerlinImage::CropImage(const Arguments& args) {
-        HandleScope scope;
-        MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
-
-        int width = args[0]->IntegerValue();
-        int height = args[1]->IntegerValue();
-        int x = args[2]->IntegerValue();
-        int y = args[3]->IntegerValue();
-        MagickCropImage(wand, width, height, x, y);
-
-        return scope.Close(MerlinImage::WriteImage(wand));
     }
 
     Handle<Value> MerlinImage::NegateImage(const Arguments& args) {
@@ -267,6 +278,7 @@ namespace merlin {
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "coalesce",  MerlinImage::CoalesceImages);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "comment",  MerlinImage::CommentImage);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "crop",      MerlinImage::CropImage);
+        NODE_SET_PROTOTYPE_METHOD(constructor_template, "info",      MerlinImage::ImageInfo);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "mosaic",  MerlinImage::MosaicImages);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "negative",  MerlinImage::NegateImage);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "resize",    MerlinImage::ResizeImage);

@@ -1,0 +1,30 @@
+{
+  "name": "merlin",
+  "description": "C++ bindings to Graphics Magick.",
+  "main": "./merlin",
+  "version": "0.1.0",
+  "author": "Nick Campbell (http://github.com/ncb000gt)",
+  "contributors": ["Marco Rogers (http://github.com/polotek)", "Thomas Mayfield (http://github.com/thegreatape)"],
+  "engines": { "node": ">= 0.2.0" },
+  "repository": {
+        "type": "git",
+        "url": "http://github.com/ncb000gt/merlin.git"
+   },
+   "licenses": [
+     {
+        "type": "MIT"
+     }
+   ],
+   "bugs": {
+     "web" : "http://github.com/ncb000gt/merlin/issues"
+   },
+   "scripts": {
+     "install": "node-waf configure build",
+     "test": "node-waf configure build; expresso tests/*"
+   },
+   "keywords": ["graphics magick", "gm", "graphics", "magick", "image", "images"],
+   "dependencies": {
+     "expresso": ">=0.3.1"
+   }
+}
+

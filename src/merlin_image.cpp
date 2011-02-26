@@ -191,15 +191,44 @@ namespace merlin {
         return scope.Close(MerlinImage::WriteImage(wand));
     }
 
+    Handle<Value> MerlinImage::ImageHeight(const Arguments& args) {
+        HandleScope scope;
+        MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+        return scope.Close(Number::New(MagickGetImageHeight(wand)));
+    }
+
     Handle<Value> MerlinImage::ImageInfo(const Arguments& args) {
         HandleScope scope;
         MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
 
-        Local<Object> size = Object::New();
-        size->Set(String::NewSymbol("width"), Number::New(MagickGetImageWidth(wand)));
-        size->Set(String::NewSymbol("height"), Number::New(MagickGetImageHeight(wand)));
+        Local<Object> info = Object::New();
+        info->Set(String::NewSymbol("width"), Number::New(MagickGetImageWidth(wand)));
+        info->Set(String::NewSymbol("height"), Number::New(MagickGetImageHeight(wand)));
+        info->Set(String::NewSymbol("size"), Number::New(MagickGetImageSize(wand)));
+        double x;
+        double y;
+        MagickGetImageResolution(wand, &x, &y);
+        Local<Object> resolution = Object::New();
+        resolution->Set(String::NewSymbol("x"), Number::New(x));
+        resolution->Set(String::NewSymbol("y"), Number::New(y));
+        info->Set(String::NewSymbol("resolution"), resolution);
 
-        return scope.Close(size);
+        return scope.Close(info);
+    }
+
+    Handle<Value> MerlinImage::ImageSize(const Arguments& args) {
+        HandleScope scope;
+        MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+        return scope.Close(Number::New(MagickGetImageSize(wand)));
+    }
+
+    Handle<Value> MerlinImage::ImageWidth(const Arguments& args) {
+        HandleScope scope;
+        MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+        return scope.Close(Number::New(MagickGetImageWidth(wand)));
     }
 
     Handle<Value> MerlinImage::MosaicImages(const Arguments& args) {
@@ -278,12 +307,14 @@ namespace merlin {
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "coalesce",  MerlinImage::CoalesceImages);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "comment",  MerlinImage::CommentImage);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "crop",      MerlinImage::CropImage);
+        NODE_SET_PROTOTYPE_METHOD(constructor_template, "height",      MerlinImage::ImageHeight);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "info",      MerlinImage::ImageInfo);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "mosaic",  MerlinImage::MosaicImages);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "negative",  MerlinImage::NegateImage);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "resize",    MerlinImage::ResizeImage);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "rotate",    MerlinImage::RotateImage);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "scale",    MerlinImage::ScaleImage);
+        NODE_SET_PROTOTYPE_METHOD(constructor_template, "width",      MerlinImage::ImageWidth);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "getBuffer", MerlinImage::GetBuffer);
 
         target->Set(String::NewSymbol("MerlinImage"), constructor_template->GetFunction());

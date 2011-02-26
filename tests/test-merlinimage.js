@@ -12,9 +12,12 @@ module.exports = {
         fs.readFile(__dirname + '/source/merlin.png', function(err, buffer) {
             var m = new merlin.MerlinImage(buffer);
 
-            getImageInfo(m, function(size) {
-                assert.equal(size.height, 400);
-                assert.equal(size.width, 640);
+            getImageInfo(m, function(info) {
+                assert.equal(info.height, 400);
+                assert.equal(info.width, 640);
+                assert.equal(info.size, 10025);
+                assert.equal(info.resolution.x, 28.35);
+                assert.equal(info.resolution.y, 28.35);
             });
         });
     },

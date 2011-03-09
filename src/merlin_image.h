@@ -42,6 +42,7 @@ class MerlinImage : public node::ObjectWrap {
       static Handle<Value> ResizeImage(const Arguments&);
       static Handle<Value> RotateImage(const Arguments&);
       static Handle<Value> ScaleImage(const Arguments&);
+      static Handle<Value> SharpenImage(const Arguments&);
 
       static MagickWand* ReadImage(MerlinImage*);
       static Handle<Value> WriteImage(MagickWand*);

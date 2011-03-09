@@ -293,6 +293,17 @@ namespace merlin {
         return scope.Close(MerlinImage::WriteImage(wand));
     }
 
+    Handle<Value> MerlinImage::SharpenImage(const Arguments& args) {
+        HandleScope scope;
+        MagickWand* wand = MerlinImage::ReadImage(  ObjectWrap::Unwrap<MerlinImage>(args.This()) );
+
+        const double radius = args[0]->NumberValue();
+        const double sigma = args[1]->NumberValue();
+        MagickSharpenImage(wand, radius, sigma);
+
+        return scope.Close(MerlinImage::WriteImage(wand));
+    }
+
     void MerlinImage::Initialize(Handle<Object> target) {
         HandleScope scope;
 
@@ -318,6 +329,7 @@ namespace merlin {
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "resize",    MerlinImage::ResizeImage);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "rotate",    MerlinImage::RotateImage);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "scale",    MerlinImage::ScaleImage);
+        NODE_SET_PROTOTYPE_METHOD(constructor_template, "sharpen",    MerlinImage::SharpenImage);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "width",      MerlinImage::ImageWidth);
         NODE_SET_PROTOTYPE_METHOD(constructor_template, "getBuffer", MerlinImage::GetBuffer);
 

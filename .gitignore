@@ -1,5 +1,4 @@
-*.swp
-*.swo
+*.sw[a-z]
 build
 .lock-wscript
 merlin.node

@@ -41,5 +41,15 @@ module.exports = {
                 assert.equal(size.width, 200);
             });
         });
+    },
+    'sharpen an image': function() {
+        fs.readFile(__dirname + '/source/merlin.png', function(err, buffer) {
+            var m = new merlin.MerlinImage(buffer);
+            var new_m;
+            assert.doesNotThrow(function() {
+                new_m = m.sharpen(0.5, 1.0);
+            });
+            assert.ok(new_m);
+        });
     }
 }

@@ -21,9 +21,13 @@ namespace merlin {
         HandleScope scope;
 
         MerlinImage *img = ObjectWrap::Unwrap<MerlinImage>(args.This());
-        Handle<Value> buf = img->buffer->handle_;
+        //fast buffer
+        Function* fastBufferConstructor = Function::Cast(*Context::GetCurrent()->Global()->Get(String::NewSymbol("Buffer")));
+        Handle<Value> argv[3] = {
+            img->buffer->handle_, Integer::New(BufferLength(img->buffer)), Integer::New(0)
+        };
 
-        return scope.Close(buf);
+        return scope.Close(fastBufferConstructor->NewInstance(3, argv));
     }
 
     MagickWand* MerlinImage::ReadImage(MerlinImage *img){
@@ -261,7 +265,7 @@ namespace merlin {
 
         int width = args[0]->IntegerValue();
         int height = args[1]->IntegerValue();
-        MagickResizeImage(wand, width, height, LanczosFilter, 1.0);
+        MagickResizeImage(wand, width, height, LanczosFilter, (double)1.0);
 
         return scope.Close(MerlinImage::WriteImage(wand));
     }

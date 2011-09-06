@@ -1,4 +1,4 @@
-import Options
+import Options, sys
 from os import unlink, symlink, popen
 from os.path import exists 
 import subprocess
@@ -19,10 +19,17 @@ def build(bld):
   obj.target = "merlin"
   obj.source = "src/merlin.cpp src/merlin_image.cpp src/buffer_compat.cpp"
 
-  imflags = "-I/usr/include/GraphicsMagick/" #subprocess.Popen(['Magick-config', '--cppflags'], stdout = subprocess.PIPE).stdout.read()
-  ldflags = subprocess.Popen(['Magick-config', '--ldflags', '--libs'], stdout = subprocess.PIPE).stdout.read()
+  imflags = "-I/usr/include/GraphicsMagick/"
 
-  wandflags = subprocess.Popen(['MagickWand-config', '--ldflags', '--libs'], stdout = subprocess.PIPE).stdout.read()
+  config_pre = 'Magick'
+  if sys.platform == 'darwin':
+    config_pre = 'GraphicsMagick' # seems that GM has this file on the mac.
+    imflags = subprocess.Popen(['GraphicsMagick-config', '--cppflags'], stdout = subprocess.PIPE).stdout.read()
+
+
+  ldflags = subprocess.Popen([config_pre + '-config', '--ldflags', '--libs'], stdout = subprocess.PIPE).stdout.read()
+
+  wandflags = subprocess.Popen([config_pre + 'Wand-config', '--ldflags', '--libs'], stdout = subprocess.PIPE).stdout.read()
 
   obj.cxxflags = ["-D_FILE_OFFSET_BITS=64", "-D_LARGEFILE_SOURCE", "-I../src"] + imflags.split() 
 
@@ -34,4 +41,3 @@ def shutdown():
   else:
     if exists('build/default/merlin.node') and not exists('merlin.node'):
       symlink('build/default/merlin.node', 'merlin.node')
-
